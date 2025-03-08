@@ -1,5 +1,3 @@
-//FLORES, Earl John C.
-//BSCS 1-A
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
