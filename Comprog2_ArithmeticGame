@@ -1,0 +1,193 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <string.h>
+#define MAX 50
+#define items 5
+int adSc[items], subSc[items], mulSc[items], divSc[items], last;
+char name[MAX][31],password[MAX][31];
+int add(int sc);
+int subtract(int sc);
+int multi(int sc);
+int divide(int sc);
+int menu();
+void init();
+int isFull();
+int isEmpty();
+int find(char n[]);
+void login(char n[], int aSc, int sSc, int mSc, int dSc);
+void signin(char n[],char p[]);
+void upd(char n[]);
+
+int main (){
+    int n;
+    char user[31], pass[31];
+while(1){
+    switch(menu()){
+    case 1:
+        system("cls");
+        printf("Player Login-in\n");
+        printf("Enter username: "); scanf(" %[^\n]", user);
+        printf("\nEnter password: ");scanf(" %[^\n]", pass);
+        break;
+    case 2:
+        system("cls");
+        printf("Player Sign-in\n");
+        printf("Enter username: "); scanf(" %[^\n]", user);
+        if(find(user) !=-1){
+            printf("Player already exists\n");
+            getchar();
+            break;
+        }
+        printf("Enter password: ");scanf(" %[^\n]", pass);
+        signin(user,pass);
+        break;
+    case 3:
+        printf("Leaderboards\n");
+        break;
+    case 4:
+        system("cls");
+        printf("Addition Game\n");
+        srand(time(NULL));
+        n = add(n);
+        printf("You got %d out of %d", n,items);
+        break;
+    case 5:
+        system("cls");
+        printf("Subtraction Game\n");
+        srand(time(NULL));
+        n = subtract(n);
+        printf("You got %d out of %d", n,items);
+        break;
+    case 6:
+        system("cls");
+        printf("Multiplication Game\n");
+        srand(time(NULL));
+        n = multi(n);
+        printf("You got %d out of %d", n,items);
+        break;
+    case 7:
+        system("cls");
+        printf("Division Game\n");
+        srand(time(NULL));
+        n = divide(n);
+        printf("You got %d out of %d", n,items);
+        break;
+    case 8:
+        printf("Exited Successfully\n");
+        exit(0);
+    default: printf("Enter 1-8 ONLY!"); getchar();
+
+    }
+}
+    return 0;
+}
+
+void init(){
+    last = -1;
+}
+
+int isFull(){
+    return(last == MAX-1);
+}
+
+int isEmpty(){
+    return (last == -1);
+}
+
+int find(char n[]){
+    for (int i = 0; i<= last; i++){
+        if(strcasecmp(n,name[i])==0){
+            return i;
+        }
+    }return -1;
+}
+
+void signin(char u[],char p[]){
+    if(isFull()){
+        printf("Number of players is full");
+        system("pause");
+        return;
+    }
+    if(find(u)!=-1){
+        printf("Player already exists!\n");
+        return;
+    }
+    last++;
+    strcpy(name[last],u);
+    strcpy(password[last],p);
+
+}
+
+void login(char n[], int aSc, int sSc, int mSc, int dSc){
+
+}
+
+int add(int sc){
+    int x, y, c = 0, ans;
+    for(int i=1;i<=items;i++){
+    x = rand() %100+1;
+    y = rand() %100+1;
+    printf("%d.) %d + %d = ",i,x,y);
+    scanf("%d",&ans);
+    if(ans== x+y){
+        printf("Correct\n");
+        c++;}else printf("Wrong, the correct answer is %d\n", x+y);
+    }
+    return c;
+}
+
+int subtract(int sc){
+    int x, y, c = 0, ans,tem;
+    for(int i=1;i<=items;i++){
+    x = rand()%100+1;
+    y = rand()%100+1;
+    if(x<y){x=tem;x=y;y=tem;}
+    printf("%d.) %d - %d = ",i,x,y);
+    scanf("%d",&ans);
+    if(ans== x-y){
+        printf("Correct\n");
+        c++;}else printf("Wrong, the correct answer is %d\n", x-y);
+    }
+    return c;
+}
+int multi(int sc){
+    int x, y, c = 0, ans;
+    for(int i=1;i<=items;i++){
+    x = rand() %10+1;
+    y = rand() %10+1;
+    printf("%d.) %d x %d = ",i,x,y);
+    scanf("%d",&ans);
+    if(ans== x*y){
+        printf("Correct\n");
+        c++;}else printf("Wrong, the correct answer is %d\n", x*y);
+    }
+    return c;
+}
+
+int divide(int sc){
+    int x, y, c = 0, ans,tem;
+    for(int i=1;i<=items;i++){
+    x = rand()%100+1;
+    y = rand()%100+1;
+    while(x%y != 0){
+    x = rand()%100+1;
+    y = rand()%100+1;
+    }
+    printf("%d.) %d / %d = ",i,x,y);
+    scanf("%d",&ans);
+    if(ans== x/y){
+        printf("Correct\n");
+        c++;}else printf("Wrong, the correct answer is %d\n", x/y);
+    }
+    return c;
+}
+int menu(){
+    int op;
+    printf("Basic Arithmetic Game\n");
+    printf("1. Log-in\n2. Sign-in\n");
+    printf("3. Leaderboards\n");
+    printf("4. Addition\n5. Subtraction\n6. Multiplication\n7. Division\n8. Exit\n");
+    printf("Enter (1-8): "); scanf("%d",&op);
+    return op;
+}
