@@ -15,8 +15,8 @@ void init();
 int isFull();
 int isEmpty();
 int find(char n[]);
-void login(char n[], int aSc, int sSc, int mSc, int dSc);
-void signin(char n[],char p[]);
+void login(char u[], char p[]);
+void signin(char u[],char p[]);
 void upd(char n[]);
 
 int main (){
@@ -28,7 +28,15 @@ while(1){
         system("cls");
         printf("Player Login-in\n");
         printf("Enter username: "); scanf(" %[^\n]", user);
+        if(find(user) == -1){
+            printf("Player does not exist yet. Sign up first.\n");
+            break;
+        }
         printf("\nEnter password: ");scanf(" %[^\n]", pass);
+        if(fPass(pass) == -1){
+            printf("Wrong password");
+            break;
+        }
         break;
     case 2:
         system("cls");
@@ -102,6 +110,13 @@ int find(char n[]){
         }
     }return -1;
 }
+int fPass(char n[]){
+    for (int i = 0; i<= last; i++){
+        if(strcasecmp(n,password[i])==0){
+            return i;
+        }
+    }return -1;
+}
 
 void signin(char u[],char p[]){
     if(isFull()){
@@ -116,10 +131,14 @@ void signin(char u[],char p[]){
     last++;
     strcpy(name[last],u);
     strcpy(password[last],p);
-
+    adSc[last] = 0;
+    subSc[last] = 0;
+    mulSc[last] = 0;
+    divSc[last] = 0;
 }
 
-void login(char n[], int aSc, int sSc, int mSc, int dSc){
+void login(char u[], char p[]){
+
 
 }
 
@@ -190,4 +209,9 @@ int menu(){
     printf("4. Addition\n5. Subtraction\n6. Multiplication\n7. Division\n8. Exit\n");
     printf("Enter (1-8): "); scanf("%d",&op);
     return op;
+}
+
+void lead(){
+    printf("Leaderboards\n");
+    printf("%d.) %s" )
 }
