@@ -5,28 +5,35 @@
 #include <string>
 using namespace std;
 #define MAX 50
-int last = -1;
+int last =-1;
 struct Record{
     string Name;
     int Quiz1,Quiz2,Quiz3;
 };
-Record Student[MAX];
 
-int Locate(string n);
-int isDup(string n);
-bool isFul();
-bool isEmp();
-float ComAve(int q1,int q2,int q3);
-void AddRec(Record s);
-void DelRec(string n);
-void DisplayAll();
+class Student{
+protected:
+    Record Student[MAX];
+    bool isFul();
+    int Locate(string n);
+    float ComAve(int q1,int q2,int q3);
+public:
+    int init = -1;
+    void AddRec(Record S);
+    void DelRec(string n);
+    void DisplayAll();
+    void Save();
+    void Retrieve();
+    int isDup(string n);
+    bool isEmp();
+};
+
 int Menu();
-void Save();
-void Retrieve();
 
 int main(){
     Record student;
-    Retrieve();
+    Student student1;
+    student1.Retrieve();
     while (1){
         switch(Menu()){
         case 1:
@@ -36,34 +43,34 @@ int main(){
             cout <<"======================"<<endl;
             cin.ignore();
             cout<<"Enter name: ";getline(cin,student.Name);
-            if(isDup(student.Name)==0){
+            if(student1.isDup(student.Name)==0){
                 cout<<student.Name<<" is already recorded."<<endl;
                 system("pause");break;}
             cout<<"\nEnter quiz 1 score: ";cin>>student.Quiz1;
             cout<<"\nEnter quiz 2 score: ";cin>>student.Quiz2;
             cout<<"\nEnter quiz 3 score: ";cin>>student.Quiz3;
-            AddRec(student);system("cls");break;
+            student1.AddRec(student);system("cls");break;
         case 2:
             system("cls");
             cin.ignore();
-            if(isEmp()){
+            if(student1.isEmp()){
                 cout<<"Record is empty."<<endl;
                 system("pause");break;
             }
             cout<<"Enter name: ";getline(cin,student.Name);
-            if(isDup(student.Name)){
+            if(student1.isDup(student.Name)){
             cout<<"No record yet"<<endl;
             system("pause");break;
             }
-            DelRec(student.Name);system("pause");system("cls");break;
+            student1.DelRec(student.Name);system("pause");system("cls");break;
         case 3:
             system("cls");
-            if(isEmp()==true){
+            if(student1.isEmp()==true){
                 cout<<"No record yet."<<endl;
                 system("pause");break;
             }
-            DisplayAll();system("pause");break;
-        case 4: cout <<"Exited Successfully"<<endl; Save(); exit(0);
+            student1.DisplayAll();system("pause");break;
+        case 4: cout <<"Exited Successfully"<<endl; student1.Save(); exit(0);
         default: cout<<"Enter (1-4) only!"<<endl; system("pause");
         }
 
@@ -71,31 +78,31 @@ int main(){
     return 0;
 }
 
-int Locate(string n){
+int Student::Locate(string n){
     int i;
     for(i = 0; i <= last; i++){
         if(n == Student[i].Name)
             return i;
     }return -1;
 }
-int isDup(string n){
+int Student::isDup(string n){
     return (Locate(n) == -1)? 1:0;
 }
-bool isFul(){
+bool Student::isFul(){
     if(last == MAX -1)
     return true;
     return false;
 }
-bool isEmp(){
+bool Student::isEmp(){
     if(last == -1)
     return true;
     return false;
 }
-float ComAve(int q1,int q2,int q3){
+float Student::ComAve(int q1,int q2,int q3){
     return(q1+q2+q3)/3.0;
 }
 
-void AddRec(Record s){
+void Student::AddRec(Record s){
     if(isFul())
         cout<<"Student record is full"<<endl;
     else{
@@ -106,7 +113,7 @@ void AddRec(Record s){
     system("pause");
     }
 }
-void DelRec(string n){
+void Student::DelRec(string n){
     int p = Locate(n),i;
     for(i = p;i<=last;i++){
     Student[i] = Student[i+1];
@@ -114,7 +121,7 @@ void DelRec(string n){
     last --;
     cout<<"Record of "<<n<<" was successfully deleted."<<endl;
 }
-void DisplayAll(){
+void Student::DisplayAll(){
     float ave;
     system("cls");
     cout <<"================================================================="<<endl;
@@ -135,7 +142,7 @@ int Menu(){
     cin>>op;
     return op;
 }
-void Save(){
+void Student::Save(){
     fstream rec;
     rec.open("Student_Record.txt",ios::out);
     if(rec.is_open()){
@@ -147,7 +154,7 @@ void Save(){
         }
     }rec.close();
 }
-void Retrieve() {
+void Student::Retrieve() {
     fstream rec("Student_Record.txt", ios::in);
     last = -1;
 
