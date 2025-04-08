@@ -3,6 +3,8 @@
 #include <iomanip>
 #include <fstream>
 #include <cstring>
+#include <cstdlib>
+#include <ctime>
 using namespace std;
 #define MAX 50
 #define items 5
@@ -21,7 +23,7 @@ struct Player{
 class User{
 protected:
 Player Users[MAX];
-float CompAve(int asc,int ssc,int msc,int dvc);
+float CompAve(Player u);
 public:
     int Add(Player u);
     int Sub(Player u);
@@ -46,7 +48,6 @@ public:
     void Blead();
     void Save();
     void Retrieve();
-    void Reloc(string n,string p, int aSc, int sSc, int mSc, int dSc,int bSc);
 };
 
 float average;
@@ -78,30 +79,30 @@ int main (){
                         system("cls"); cout<<"Addition Game\n";
                         srand(time(NULL));
                         n = user.Add(user1);
-                        cout<<"You got "<<n<<" out of "<<items<<endl;
-                        system("cls"); user.Alead(); user.Sort();
-                        system("pause"); continue;
+                        cout<<"You got "<<n<<" out of "<<items<<endl; system("pause");
+                        system("cls"); user.Alead();
+                        system("pause"); user.Sort();continue;
                     case 3:
                         system("cls"); cout<<"Subtraction Game\n";
                         srand(time(NULL));
                         n = user.Sub(user1);
-                        cout<<"You got "<<n<<" out of "<<items<<endl;
-                        system("cls"); user.Slead(); user.Sort();
-                        system("pause"); continue;
+                        cout<<"You got "<<n<<" out of "<<items<<endl;system("pause");
+                        system("cls"); user.Slead();
+                        system("pause");user.Sort();continue;
                     case 4:
                         system("cls"); cout<<"Multiplication Game\n";
                         srand(time(NULL));
                         n = user.Mul(user1);
-                        cout<<"You got "<<n<<" out of "<<items<<endl;
-                        system("cls"); user.Mlead();user.Sort();
-                        system("pause"); continue;
+                        cout<<"You got "<<n<<" out of "<<items<<endl;system("pause");
+                        system("cls"); user.Mlead();
+                        system("pause");user.Sort(); continue;
                     case 5:
                         system("cls"); cout<<"Division Game\n";
                         srand(time(NULL));
                         n = user.Div(user1);
-                        cout<<"You got "<<n<<" out of "<<items<<endl;
-                        system("cls"); user.Dlead();user.Sort();
-                        system("pause"); continue;
+                        cout<<"You got "<<n<<" out of "<<items<<endl;system("pause");
+                        system("cls"); user.Dlead(); system("pause");
+                        user.Sort(); continue;
                     case 6:
                         system("cls"); srand(time(NULL));user.Fast(user1);
                         system("cls");user.Blead();system("pause");user.Sort();continue;
@@ -110,6 +111,7 @@ int main (){
             }break;
         case 2:
             system("cls");
+            cin.ignore();
             cout<<"Player Sign-in\n";
             cout<<"--------------------------\n";
             cout<<"Enter username: "; getline(cin,user1.Name);
@@ -126,15 +128,14 @@ int main (){
         }
     }return 0;
 }
-
 void User::init(){
     last = -1;
 }
 bool User::isFull(){
-    if(last == MAX-1); return true; return false;
+    if(last == MAX-1) return true; return false;
 }
 bool User::isEmpty(){
-    if(last == -1); return true; return false;
+    if(last == -1) return true; return false;
 }
 int User::Locate(Player u){
     for (int i = 0; i<= last; i++){
@@ -152,13 +153,10 @@ int User::Fpass(Player u){
 }
 int User::Signin(Player u){
     if(isFull()){
-        cout<<"Number of players is full\n";
-        system("pause");
-        return 0;
+        cout<<"Number of players is full\n"; system("pause"); return -1;
     }
     if(this->Locate(u)!=-1){
-        cout<<"Player already exists!\n";
-        return 0;
+        cout<<"Player already exists!\n"; system(pause); return -1;
     }
     last++;
     Users[last]=u;
@@ -170,6 +168,7 @@ int User::Signin(Player u){
     return 0;
 }
 int User::Login(){
+    cin.ignore();
     cout<<"Player Log-in\n";
     cout<<"--------------------------\n";
     cout<<"Enter username: "; getline(cin,user1.Name);
@@ -182,7 +181,7 @@ int User::Login(){
         cout<<"Wrong password\n";
         return -1;
     }
-    cout<<"Welcome, "<<user1.Name<<endl;
+    cout<<"Welcome, "<<user1.Name<<endl; system("pause");
     return 0;
 }
 int User::Add(Player u){
@@ -217,8 +216,8 @@ int User::Sub(Player u){
 int User::Mul(Player u){
     int x, y, c = 0, ans, i = user.Locate(u);
     for(int i=1;i<=items;i++){
-    x = rand() %50+1;
-    y = rand() %50+1;
+    x = rand() %20+1;
+    y = rand() %20+1;
     cout<<i<< ".) "<<x<<" x "<<y<<" = ";
     cin>>ans;
     if(ans== x*y){
@@ -268,6 +267,7 @@ int User::GameMenu(){
     return gop;
 }
 int User::Lead(){
+    user.Sort();
     system("cls");
     float ave; int i,limit = (last < 10)? last:10;
     cout<<"------------------------------------------------------\n";
@@ -275,11 +275,12 @@ int User::Lead(){
     cout<<"------------------------------------------------------\n";
     cout<<"\tName\tScore +\tScore -\tScore x\tScore /\tAverage\n";
     cout<<"------------------------------------------------------\n";
+    user.Sort();
     for (i = 0;i<=limit;i++){
-        ave = user.CompAve(Users[i].Ascore,Users[i].Sscore,Users[i].Mscore,Users[i].Dscore);
+        ave = user.CompAve(Users[i]);
         cout<<i+1<<".) "<<Users[i].Name<<"\t"<<Users[i].Ascore<<"\t"<<Users[i].Sscore<<"\t"<<Users[i].Mscore<<"\t"<<Users[i].Dscore<<"\t"<<ave<<endl;
     }
-    user.Blead();
+    user.Blead();user.Sort();
     system("pause");
 
     return 1;
@@ -287,29 +288,13 @@ int User::Lead(){
 void User::Alead(){
     system("cls");
     int i,limit = (last < 10)? last:10;
-    string tname, tpass;
-    int tAdd, tSub, tMul, tDiv,tblit;
+    Player tUser;
     for (i = 0; i < last; i++) {
         for (int j = i + 1; j <= last; j++) {
             if (Users[i].Ascore < Users[j].Ascore) {
-                tname = Users[i].Name;
-                Users[i].Name = Users[j].Name;
-                Users[j].Name = tname;
-                tAdd = adSc[i];
-                adSc[i] = adSc[j];
-                adSc[j] = tAdd;
-                tSub = subSc[i];
-                subSc[i] = subSc[j];
-                subSc[j] = tSub;
-                tMul = mulSc[i];
-                mulSc[i] = mulSc[j];
-                mulSc[j] = tMul;
-                tDiv = divSc[i];
-                divSc[i] = divSc[j];
-                divSc[j] = tDiv;
-                tblit = blitzSc[i];
-                blitzSc[i] = blitzSc[j];
-                blitzSc[j] = tblit;
+                tUser = Users[i];
+                Users[i] = Users[j];
+                Users[j] = tUser;
             }
         }
     }
@@ -319,40 +304,20 @@ void User::Alead(){
     printf("Name\t\tScore \n");
     printf("------------------------------\n");
     for (i = 0;i<=limit;i++){
-        if (i==0)printf("\033[1;33m");else printf("\033[0;37m");
-        printf("%d.) %s\t%d\n", i+1, name[i],adSc[i]);
+        if (i==0)cout<<"\033[1;33m";else cout<<"\033[0;37m";
+        cout<<i+1<<".) "<<Users[i].Name<<"\t"<<Users[i].Ascore<<"\n";
     }
 }
 void User::Slead(){
     system("cls");
     int i,limit = (last < 10)? last:10;
-    char tname[31], tpass[31];
-    int tAdd, tSub, tMul, tDiv,tblit;
+    Player tUser;
     for (i = 0; i < last; i++) {
         for (int j = i + 1; j <= last; j++) {
-            if (subSc[i] < subSc[j]) {
-                strcpy(tname, name[i]);
-                strcpy(name[i], name[j]);
-                strcpy(name[j], tname);
-                strcpy(tpass, password[i]);
-                strcpy(password[i], password[j]);
-                strcpy(password[j], tpass);
-
-                tAdd = adSc[i];
-                adSc[i] = adSc[j];
-                adSc[j] = tAdd;
-                tSub = subSc[i];
-                subSc[i] = subSc[j];
-                subSc[j] = tSub;
-                tMul = mulSc[i];
-                mulSc[i] = mulSc[j];
-                mulSc[j] = tMul;
-                tDiv = divSc[i];
-                divSc[i] = divSc[j];
-                divSc[j] = tDiv;
-                tblit = blitzSc[i];
-                blitzSc[i] = blitzSc[j];
-                blitzSc[j] = tblit;
+            if (Users[i].Sscore < Users[j].Sscore) {
+                tUser = Users[i];
+                Users[i] = Users[j];
+                Users[j] = tUser;
             }
         }
     }
@@ -362,41 +327,20 @@ void User::Slead(){
     cout<<"Name\t\tScore \n";
     cout<<"---------------------------------\n";
     for (i = 0;i<=limit;i++){
-        if (i==0)printf("\033[1;33m");else printf("\033[0;37m");
-        printf("%d.) %s\t%d\n", i+1, name[i],subSc[i]);
+        if (i==0)cout<<"\033[1;33m";else cout<<"\033[0;37m";
+        cout<<i+1<<".) "<<Users[i].Name<<"\t"<<Users[i].Sscore<<"\n";
     }
-    return 1;
 }
 void User::Mlead(){
     system("cls");
     int i,limit = (last < 10)? last:10;
-    char tname[31], tpass[31];
-    int tAdd, tSub, tMul, tDiv,tblit;
+    Player tUser;
     for (i = 0; i < last; i++) {
         for (int j = i + 1; j <= last; j++) {
-            if (mulSc[i] < mulSc[j]) {
-                strcpy(tname, name[i]);
-                strcpy(name[i], name[j]);
-                strcpy(name[j], tname);
-                strcpy(tpass, password[i]);
-                strcpy(password[i], password[j]);
-                strcpy(password[j], tpass);
-
-                tAdd = adSc[i];
-                adSc[i] = adSc[j];
-                adSc[j] = tAdd;
-                tSub = subSc[i];
-                subSc[i] = subSc[j];
-                subSc[j] = tSub;
-                tMul = mulSc[i];
-                mulSc[i] = mulSc[j];
-                mulSc[j] = tMul;
-                tDiv = divSc[i];
-                divSc[i] = divSc[j];
-                divSc[j] = tDiv;
-                tblit = blitzSc[i];
-                blitzSc[i] = blitzSc[j];
-                blitzSc[j] = tblit;
+            if (Users[i].Mscore < Users[j].Mscore) {
+                tUser = Users[i];
+                Users[i] = Users[j];
+                Users[j] = tUser;
             }
         }
     }
@@ -407,39 +351,19 @@ void User::Mlead(){
     cout<<"------------------------------\n";
     for (i = 0;i<=limit;i++){
         if (i==0)cout<<"\033[1;33m";else cout<<"\033[0;37m";
-        printf("%d.) %s\t%d\n", i+1, name[i],mulSc[i]);
+        cout<<i+1<<".) "<<Users[i].Name<<"\t"<<Users[i].Mscore<<"\n";
     }
 }
 void User::Dlead(){
     system("cls");
     int i,limit = (last < 10)? last:10;
-    char tname[31], tpass[31];
-    int tAdd, tSub, tMul, tDiv,tblit;
+    Player tUser;
     for (i = 0; i < last; i++) {
         for (int j = i + 1; j <= last; j++) {
-            if (divSc[i] < divSc[j]) {
-                strcpy(tname, name[i]);
-                strcpy(name[i], name[j]);
-                strcpy(name[j], tname);
-                strcpy(tpass, password[i]);
-                strcpy(password[i], password[j]);
-                strcpy(password[j], tpass);
-
-                tAdd = adSc[i];
-                adSc[i] = adSc[j];
-                adSc[j] = tAdd;
-                tSub = subSc[i];
-                subSc[i] = subSc[j];
-                subSc[j] = tSub;
-                tMul = mulSc[i];
-                mulSc[i] = mulSc[j];
-                mulSc[j] = tMul;
-                tDiv = divSc[i];
-                divSc[i] = divSc[j];
-                divSc[j] = tDiv;
-                tblit = blitzSc[i];
-                blitzSc[i] = blitzSc[j];
-                blitzSc[j] = tblit;
+            if (Users[i].Dscore < Users[j].Dscore) {
+                tUser = Users[i];
+                Users[i] = Users[j];
+                Users[j] = tUser;
             }
         }
     }
@@ -450,133 +374,79 @@ void User::Dlead(){
     cout<<"------------------------------------\n";
     for (i = 0;i<=limit;i++){
         if (i==0)cout<<"\033[1;33m";else cout<<"\033[0;37m";
-        printf("%d.) %s\t%d\n", i+1, name[i],divSc[i]);
+        cout<<i+1<<".) "<<Users[i].Name<<"\t"<<Users[i].Dscore<<"\n";
     }
 }
 void User::Blead(){
     int i,limit = (last < 10)? last:10;
-    char tname[31], tpass[31];
-    int tAdd, tSub, tMul, tDiv,tblit;
+    Player tUser;
     for (i = 0; i < last; i++) {
         for (int j = i + 1; j <= last; j++) {
-            if (blitzSc[i] < blitzSc[j]) {
-                strcpy(tname, name[i]);
-                strcpy(name[i], name[j]);
-                strcpy(name[j], tname);
-                strcpy(tpass, password[i]);
-                strcpy(password[i], password[j]);
-                strcpy(password[j], tpass);
-
-                tAdd = adSc[i];
-                adSc[i] = adSc[j];
-                adSc[j] = tAdd;
-                tSub = subSc[i];
-                subSc[i] = subSc[j];
-                subSc[j] = tSub;
-                tMul = mulSc[i];
-                mulSc[i] = mulSc[j];
-                mulSc[j] = tMul;
-                tDiv = divSc[i];
-                divSc[i] = divSc[j];
-                divSc[j] = tDiv;
-                tblit = blitzSc[i];
-                blitzSc[i] = blitzSc[j];
-                blitzSc[j] = tblit;
+            if (Users[i].Bscore < Users[j].Bscore) {
+                tUser = Users[i];
+                Users[i] = Users[j];
+                Users[j] = tUser;
             }
         }
     }
     cout<<"\n------------------------------------------------------\n";
     cout<<"\t\tTop 10. Blitz Game Leaderboards\n";
     cout<<"------------------------------------------------------\n";
-    cout<<"\tName\t\tHighest Score \n");
-    cout<<("------------------------------------------------------\n";
+    cout<<"\tName\t\tHighest Score \n";
+    cout<<"------------------------------------------------------\n";
     for (i = 0;i<=limit;i++){
-        if (i==0)cout<<"\033[1;33m";else cout<<"\033[0;37m" ;
-        printf("%d.) %s\t\t%d\n", i+1, name[i],blitzSc[i]);
+        if (i==0)cout<<"\033[1;33m";else cout<<"\033[0;37m";
+        cout<<i+1<<".) "<<Users[i].Name<<"\t"<<Users[i].Bscore<<"\n";
     }
 }
-float User::CompAve(int asc,int ssc,int msc,int dvc){
-    return (asc + ssc + msc + dvc)/4.0;
+float User::CompAve(Player u){
+    return (u.Ascore + u.Sscore + u.Mscore + u.Dscore)/4.0;
 }
 void User::Sort(){
-    char tname[31],tpass[31];
-    int tAdd,tSub,tMul,tDiv, tblit,i,j;
+    Player tUser;
+    int i,j;
     for (i = 0; i <last; i++){
         for (j = i + 1; j <=last; j++){
-            if(compAve(adSc[i],subSc[i],mulSc[i],divSc[i])<compAve(adSc[j],subSc[j],mulSc[j],divSc[j])){
-                strcpy(tname, name[i]);
-                strcpy(name[i],name[j]);
-                strcpy(name[j], tname);
-
-                strcpy(tpass, password[i]);
-                strcpy(password[i],password[j]);
-                strcpy(password[j],tpass);
-
-                tAdd = adSc[i];
-                adSc[i] = adSc[j];
-                adSc[j] = tAdd;
-
-                tSub = subSc[i];
-                subSc[i] = subSc[j];
-                subSc[j] = tSub;
-
-                tMul = mulSc[i];
-                mulSc[i] = mulSc[j];
-                mulSc[j] = tMul;
-
-                tDiv = divSc[i];
-                divSc[i] = divSc[j];
-                divSc[j] = tDiv;
-
-                tblit = blitzSc[i];
-                blitzSc[i]=blitzSc[j];
-                blitzSc[j]=tblit;
-            }
+            if(CompAve(Users[i])<CompAve(Users[j]));
+                tUser = Users[i];
+                Users[i] = Users[j];
+                Users[j] = tUser;
         }
     }
-
 }
 void User::Save(){
-    FILE *fp = fopen("leaderboards.txt","w+");
-    if (fp == NULL){
-        printf("File not found.\n");
-        system("pause");
-    }else{
-        for (int i = 0; i <=last; i++){
-            fprintf(fp,"%s\n%s\n%d %d %d %d %d\n", name[i],password[i],adSc[i],subSc[i],mulSc[i],divSc[i],blitzSc[i]);
+    fstream rec;
+    rec.open("leaderboards.txt",ios::out);
+    if(rec.is_open()){
+        for(int i=0;i<=last;i++){
+            rec << Users[i].Name <<"\n"<< Users[i].Password<<"\n"
+            <<Users[i].Ascore<<" "<<Users[i].Sscore<<" "
+            <<Users[i].Mscore<<" "<<Users[i].Dscore<<" "
+            <<Users[i].Bscore<<endl;
         }
-    fclose(fp);
     }
+    rec.close();
 }
 void User::Retrieve(){
-    FILE *fp = fopen("leaderboards.txt","r+");
-    char n[31],p[31];
-    int aSc,sSc,mSc,dSc,bSc;
-    if(fp == NULL){
-        printf("No player yet\n");
-        return;
+    fstream rec;
+    rec.open("leaderboards.txt",ios::in);
+    last = -1;
+    while(true){
+        Player Ruser;
+        if(!getline(rec,Ruser.Name))break;
+        if(!getline(rec,Ruser.Password))break;
+        if(!(rec >> Ruser.Ascore >> Ruser.Sscore >> Ruser.Mscore
+             >> Ruser.Dscore >> Ruser.Bscore)) break;
+        rec.ignore();
+        Users[++last] = Ruser;
     }
-    while(!feof(fp)){
-        fscanf(fp, " %[^\n]\n%[^\n]\n%d %d %d %d %d\n",n, p,&aSc,&sSc,&mSc,&dSc,&bSc);
-        reloc(n,p,aSc,sSc,mSc,dSc,bSc);
-    }
-    fclose(fp);
-}
-void User::Reloc(char n[], char p[],int aSc, int sSc, int mSc, int dSc,int bSc){
-    last++;
-    strcpy(name[last], n);
-    strcpy(password[last], p);
-    adSc[last] = aSc;
-    subSc[last] = sSc;
-    mulSc[last] = mSc;
-    divSc[last] = dSc;
-    blitzSc[last] = bSc;
+    rec.close();
 }
 void User::Fast(Player u){
-    int x,y,ans, score =0,opr,i=user.Locate(u);
+    int x,y,ans, score =0,opr,i=user.Locate(u), num=1;
     time_t start,now;
-    printf("Blitz game! Answer as many as you can under %d seconds.\n",TIME);
-    printf("Press Enter to start\n");
+    cout<<"Blitz game! Answer as many as you can under "<<TIME<<" seconds.\n";
+    cout<<"Press Enter to start\n";
     getchar(); getchar();
 
     start = time(NULL);
@@ -586,43 +456,52 @@ void User::Fast(Player u){
         if(difftime(now,start)>= TIME)break;
         opr = rand()%4+1;
         if(opr == 1){
-            x = rand()%10+1;
-            y = rand()%10+1;
-            cout<<i<< ".) "<<x<<" + "<<y<<" = "; cin>>ans;
-            if(ans == x + y){
-                score++;printf("\033[1;32mCorrect\033[0m\n");}
-            else printf("\033[1;31mWrong\033[0m, the correct answer is %d\n", x+y);
+            x = rand() %10+1;
+            y = rand() %10+1;
+            cout<<num<<".) "<<x<<" + "<<y<<" = ";
+            cin>>ans;
+            num++;
+            if(ans== x+y){
+                cout<<"\033[1;32mCorrect\033[0m\n";
+                score++;}
+            else cout<<"\033[1;31mWrong\033[0m, the correct answer is "<<x+y <<endl;
         }
         else if(opr == 2){
             do{x = rand()%10+1;y = rand()%10+1;}while(x<y);
-            cout<<i<< ".) "<<x<<" - "<<y<<" = "; cin>>ans;
-            if(ans == x - y){
-                score++;printf("\033[1;32mCorrect\033[0m\n");}
-            else printf("\033[1;31mWrong\033[0m, the correct answer is %d\n", x-y);
+            cout<<num<< ".) "<<x<<" - "<<y<<" = ";
+            cin>>ans;
+            num++;
+            if(ans== x-y){
+                printf("\033[1;32mCorrect\033[0m\n");
+                score++;}else cout<<"\033[1;31mWrong\033[0m, the correct answer is "<<x-y<<endl;
         }
         else if(opr == 3){
-            x = rand()%10+1;
-            y = rand()%10+1;
-            cout<<i<< ".) "<<x<<" x "<<y<<" = "; cin>>ans;
-            if(ans == x * y){
-                score++;cout"\033[1;32mCorrect\033[0m\n";}
-            else printf("\033[1;31mWrong\033[0m, the correct answer is %d\n", x*y);
+            x = rand() %10+1;
+            y = rand() %10+1;
+            cout<<num<< ".) "<<x<<" x "<<y<<" = ";
+            cin>>ans;
+            num++;
+            if(ans== x*y){
+                printf("\033[1;32mCorrect\033[0m\n");
+                score++;}
+            else cout<<"\033[1;31mWrong\033[0m, the correct answer is "<<x*y<<endl;
         }
-       else {
-            x = rand()%10+1;
-            y = rand()%10+1;
+        else {
             do{
             x = rand()%10+1;
             y = rand()%10+1;
             } while(x%y != 0);
-            cout<<i<< ".) "<<x<<" / "<<y<<" = "; cin>>ans;
-            if(ans == x / y){
-                score++;printf("\033[1;32mCorrect\033[0m\n");}
-            else printf("\033[1;31mWrong\033[0m, the correct answer is %d\n", x/y);
+            cout<<num<< ".) "<<x<<" / "<<y<<" = ";
+            cin>>ans;
+            num++;
+            if(ans== x/y){
+                cout<<"\033[1;32mCorrect\033[0m\n";
+                score++;}
+            else cout<<"\033[1;31mWrong\033[0m, the correct answer is "<<x/y<<endl;
         }
     }
-    Users[i].blitzSc = score;
+    Users[i].Bscore = score;
     system("cls");
-    printf("Time's up! You got %d correct answers.\n",score);
+    cout<<"Time's up! You got "<<score<<" correct answers.\n";
     system("pause");
 }
