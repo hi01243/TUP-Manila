@@ -31,7 +31,7 @@ public:
     int Div(Player u);
     void Fast(Player u);
     int Menu();
-    int GameMenu();
+    int GameMenu(Player u);
     void init();
     bool isFull();
     bool isEmpty();
@@ -70,7 +70,7 @@ int main (){
             user.Lead();
             while(1){
                 system("cls");
-                int choice = user.GameMenu();
+                int choice = user.GameMenu(user1);
                 if(choice == 7){user.Save(); break;}
                 switch(choice){
                     case 1:
@@ -156,7 +156,7 @@ int User::Signin(Player u){
         cout<<"Number of players is full\n"; system("pause"); return -1;
     }
     if(this->Locate(u)!=-1){
-        cout<<"Player already exists!\n"; system(pause); return -1;
+        cout<<"Player already exists!\n"; system("pause"); return -1;
     }
     last++;
     Users[last]=u;
@@ -207,7 +207,7 @@ int User::Sub(Player u){
     cout<<i<< ".) "<<x<<" - "<<y<<" = ";
     cin>>ans;
     if(ans== x-y){
-        printf("\033[1;32mCorrect\033[0m\n");
+        cout<<"\033[1;32mCorrect\033[0m\n";
         c++;}else cout<<"\033[1;31mWrong\033[0m, the correct answer is "<<x-y<<endl;
     }
     Users[i].Sscore = c;
@@ -221,7 +221,7 @@ int User::Mul(Player u){
     cout<<i<< ".) "<<x<<" x "<<y<<" = ";
     cin>>ans;
     if(ans== x*y){
-        printf("\033[1;32mCorrect\033[0m\n");
+        cout<<"\033[1;32mCorrect\033[0m\n";
         c++;}else cout<<"\033[1;31mWrong\033[0m, the correct answer is "<<x*y<<endl;
     }
     Users[i].Mscore = c;
@@ -248,26 +248,26 @@ int User::Div(Player u){
 int User::Menu(){
     system("cls");
     int op;
-    printf("--------------------------\n");
-    printf("Basic Arithmetic Game\n");
-    printf("--------------------------\n");
-    printf("1. Log-in\n2. Sign-in\n3. Save and Exit\n");
-    printf("--------------------------\n");
-    printf("Enter (1-3): "); cin>>op;
+    cout<<"--------------------------\n";
+    cout<<"Basic Arithmetic Game\n";
+    cout<<"--------------------------\n";
+    cout<<"1. Log-in\n2. Sign-in\n3. Save and Exit\n";
+    cout<<"--------------------------\n";
+    cout<<"Enter (1-3): "; cin>>op;
     return op;
 }
-int User::GameMenu(){
+int User::GameMenu(Player u){
     int gop;
-    printf("--------------------------\n");
-    printf("Basic Arithmetic Game\n");
-    printf("--------------------------\n");
-    printf("1. Leaderboards\n");
-    printf("2. Addition\n3. Subtraction\n4. Multiplication\n5. Division\n6. Blitz Game\n7. Return to Main Menu\n");
-    printf("Enter (1-7): "); cin>>gop;
+    cout<<"--------------------------\n";
+    cout<<"Basic Arithmetic Game\n";
+    cout<<"--------------------------\n";
+    cout<<"Playing as: "<<user1.Name<<endl;
+    cout<<"--------------------------\n1. Leaderboards\n";
+    cout<<"2. Addition\n3. Subtraction\n4. Multiplication\n5. Division\n6. Blitz Game\n7. Return to Main Menu\n";
+    cout<<"Enter (1-7): "; cin>>gop;
     return gop;
 }
 int User::Lead(){
-    user.Sort();
     system("cls");
     float ave; int i,limit = (last < 10)? last:10;
     cout<<"------------------------------------------------------\n";
@@ -280,8 +280,7 @@ int User::Lead(){
         ave = user.CompAve(Users[i]);
         cout<<i+1<<".) "<<Users[i].Name<<"\t"<<Users[i].Ascore<<"\t"<<Users[i].Sscore<<"\t"<<Users[i].Mscore<<"\t"<<Users[i].Dscore<<"\t"<<ave<<endl;
     }
-    user.Blead();user.Sort();
-    system("pause");
+    user.Blead(); user.Sort(); system("pause");
 
     return 1;
 }
@@ -298,11 +297,11 @@ void User::Alead(){
             }
         }
     }
-    printf("---------------------------------\n");
-    printf(" Top 10. Addition Leaderboards\n");
-    printf("---------------------------------\n");
-    printf("Name\t\tScore \n");
-    printf("------------------------------\n");
+    cout<<"---------------------------------\n";
+    cout<<" Top 10. Addition Leaderboards\n";
+    cout<<"---------------------------------\n";
+    cout<<"Name\t\tScore \n";
+    cout<<"------------------------------\n";
     for (i = 0;i<=limit;i++){
         if (i==0)cout<<"\033[1;33m";else cout<<"\033[0;37m";
         cout<<i+1<<".) "<<Users[i].Name<<"\t"<<Users[i].Ascore<<"\n";
@@ -407,10 +406,12 @@ void User::Sort(){
     int i,j;
     for (i = 0; i <last; i++){
         for (j = i + 1; j <=last; j++){
-            if(CompAve(Users[i])<CompAve(Users[j]));
+            if(CompAve(Users[i])<CompAve(Users[j])){
                 tUser = Users[i];
                 Users[i] = Users[j];
                 Users[j] = tUser;
+            }
+
         }
     }
 }
@@ -472,7 +473,7 @@ void User::Fast(Player u){
             cin>>ans;
             num++;
             if(ans== x-y){
-                printf("\033[1;32mCorrect\033[0m\n");
+                cout<<"\033[1;32mCorrect\033[0m\n";
                 score++;}else cout<<"\033[1;31mWrong\033[0m, the correct answer is "<<x-y<<endl;
         }
         else if(opr == 3){
@@ -482,7 +483,7 @@ void User::Fast(Player u){
             cin>>ans;
             num++;
             if(ans== x*y){
-                printf("\033[1;32mCorrect\033[0m\n");
+                cout<<"\033[1;32mCorrect\033[0m\n";
                 score++;}
             else cout<<"\033[1;31mWrong\033[0m, the correct answer is "<<x*y<<endl;
         }
