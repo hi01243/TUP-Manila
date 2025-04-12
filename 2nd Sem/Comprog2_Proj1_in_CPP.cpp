@@ -9,7 +9,7 @@ using namespace std;
 #define MAX 50
 #define items 5
 #define TIME 10
-int last;
+
 struct Player{
     string Name;
     string Password;
@@ -19,12 +19,19 @@ struct Player{
     int Dscore;
     int Bscore;
 };
-
-class User{
-protected:
-Player Users[MAX];
-float CompAve(Player u);
+class File{
+    virtual void Save()= 0;
+    virtual void Retrieve()=0;
+};
+class User: public File{
+private:
+    Player Users[MAX];
+    float CompAve(Player u);
+    int last;
 public:
+    void setUser(Player user){Users[last++] = user;}
+    void setLast(int Last){last = Last;}
+    int getLast(){return last;}
     int Add(Player u);
     int Sub(Player u);
     int Mul(Player u);
@@ -46,9 +53,10 @@ public:
     void Mlead();
     void Dlead();
     void Blead();
-    void Save();
-    void Retrieve();
+    void Save()override;
+    void Retrieve()override;
 };
+
 
 float average;
 Player user1;
@@ -416,8 +424,7 @@ void User::Sort(){
     }
 }
 void User::Save(){
-    fstream rec;
-    rec.open("leaderboards.txt",ios::out);
+    ofstream rec("Leaderboards.txt");
     if(rec.is_open()){
         for(int i=0;i<=last;i++){
             rec << Users[i].Name <<"\n"<< Users[i].Password<<"\n"
@@ -429,8 +436,7 @@ void User::Save(){
     rec.close();
 }
 void User::Retrieve(){
-    fstream rec;
-    rec.open("leaderboards.txt",ios::in);
+    ifstream rec("Leaderboards.txt");
     last = -1;
     while(true){
         Player Ruser;
