@@ -23,20 +23,14 @@ class File{
     virtual void Save()= 0;
     virtual void Retrieve()=0;
 };
-class User: public File{
+class User: File{
 private:
-    Player Users[MAX];
     float CompAve(Player u);
     int last;
+protected:
+    Player Users[MAX];
 public:
-    void setUser(Player user){Users[last++] = user;}
-    void setLast(int Last){last = Last;}
     int getLast(){return last;}
-    int Add(Player u);
-    int Sub(Player u);
-    int Mul(Player u);
-    int Div(Player u);
-    void Fast(Player u);
     int Menu();
     int GameMenu(Player u);
     void init();
@@ -57,14 +51,39 @@ public:
     void Retrieve()override;
 };
 
+class Game:public User{
+public:
+    virtual int games(Player u)=0;
+};
+class Add:public Game{
+public:
+    int games(Player u)override;
+};
+class Sub:public Game{
+public:
+    int games(Player u)override;
+};
+class Mul:public Game{
+public:
+    int games(Player u)override;
+};
+
+class Div:public Game{
+public:
+    int games(Player u)override;
+};
+class Fast:public Game{
+public:
+    int games(Player u)override;
+};
 
 float average;
 Player user1;
 User user;
 int main (){
     int n;
-    user.init();
-    user.Retrieve();
+    user.init(); user.Retrieve();
+    Add addGame; Sub subGame;Mul mulGame;Div divGame;Fast blitzGame;
     while(1){
         switch(user.Menu()){
         case 1:
@@ -86,33 +105,35 @@ int main (){
                     case 2:
                         system("cls"); cout<<"Addition Game\n";
                         srand(time(NULL));
-                        n = user.Add(user1);
+                        n = addGame.games(user1);
                         cout<<"You got "<<n<<" out of "<<items<<endl; system("pause");
                         system("cls"); user.Alead();
                         system("pause"); user.Sort();continue;
                     case 3:
                         system("cls"); cout<<"Subtraction Game\n";
                         srand(time(NULL));
-                        n = user.Sub(user1);
+                        n = subGame.games(user1);
                         cout<<"You got "<<n<<" out of "<<items<<endl;system("pause");
                         system("cls"); user.Slead();
                         system("pause");user.Sort();continue;
                     case 4:
                         system("cls"); cout<<"Multiplication Game\n";
                         srand(time(NULL));
-                        n = user.Mul(user1);
+                        n = mulGame.games(user1);
                         cout<<"You got "<<n<<" out of "<<items<<endl;system("pause");
                         system("cls"); user.Mlead();
                         system("pause");user.Sort(); continue;
                     case 5:
                         system("cls"); cout<<"Division Game\n";
                         srand(time(NULL));
-                        n = user.Div(user1);
+                        n = divGame.games(user1);
                         cout<<"You got "<<n<<" out of "<<items<<endl;system("pause");
                         system("cls"); user.Dlead(); system("pause");
                         user.Sort(); continue;
                     case 6:
-                        system("cls"); srand(time(NULL));user.Fast(user1);
+                        system("cls"); srand(time(NULL));
+                        n = blitzGame.games(user1);
+                        cout<<"Time's up! You got "<<n<<" correct answers.\n";
                         system("cls");user.Blead();system("pause");user.Sort();continue;
                     default: cout<<"Enter 1-7 ONLY!\n";getchar();getchar();continue;
                     }
@@ -192,7 +213,7 @@ int User::Login(){
     cout<<"Welcome, "<<user1.Name<<endl; system("pause");
     return 0;
 }
-int User::Add(Player u){
+int Add::games(Player u){
     int x, y, c = 0, ans,i =Locate(u);
     for(int i=1;i<=items;i++){
     x = rand() %100+1;
@@ -206,7 +227,7 @@ int User::Add(Player u){
     Users[i].Ascore = c;
     return c;
 }
-int User::Sub(Player u){
+int Sub::games(Player u){
     int x, y, c = 0, ans,i = user.Locate(u);
     for(int i=1;i<=items;i++){
     x = rand()%100+1;
@@ -221,7 +242,7 @@ int User::Sub(Player u){
     Users[i].Sscore = c;
     return c;
 }
-int User::Mul(Player u){
+int Mul::games(Player u){
     int x, y, c = 0, ans, i = user.Locate(u);
     for(int i=1;i<=items;i++){
     x = rand() %20+1;
@@ -235,7 +256,7 @@ int User::Mul(Player u){
     Users[i].Mscore = c;
     return c;
 }
-int User::Div(Player u){
+int Div::games(Player u){
     int x, y, c = 0, ans, i = user.Locate(u);
     for(int i=1;i<=items;i++){
     x = rand()%100+1;
@@ -419,7 +440,6 @@ void User::Sort(){
                 Users[i] = Users[j];
                 Users[j] = tUser;
             }
-
         }
     }
 }
@@ -449,7 +469,7 @@ void User::Retrieve(){
     }
     rec.close();
 }
-void User::Fast(Player u){
+int Fast::games(Player u){
     int x,y,ans, score =0,opr,i=user.Locate(u), num=1;
     time_t start,now;
     cout<<"Blitz game! Answer as many as you can under "<<TIME<<" seconds.\n";
@@ -509,6 +529,7 @@ void User::Fast(Player u){
     }
     Users[i].Bscore = score;
     system("cls");
-    cout<<"Time's up! You got "<<score<<" correct answers.\n";
+
     system("pause");
+    return score;
 }
