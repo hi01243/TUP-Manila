@@ -1,3 +1,4 @@
+import os
 """""
 Study the simple Tic Tac Toe program attached below. Modify the game such that a player (player X) plays against the computer (player 0). The computer must have all of the following features.
 Tries to win if possible.
@@ -9,11 +10,9 @@ Prefers corners over edges.
 """
 
 def print_board(board):
-    print("\n")
     for row in board:
         print(" | ".join(row))
         print("-"*10)
-    print("\n")
 
 def print_Iboard():
     print("\nInstruction board: \n")
@@ -21,17 +20,26 @@ def print_Iboard():
         row = [str(i *3 + j + 1) for j in range(3)]
         print(" | ".join(row))
         print("-"*10)
-def check_winner(board, player):
+def check_winner(board):
     # Check rows, columns, and diagonals
     for i in range(3):
-        if all([cell == player for cell in board[i]]):  # Rows
-            return True
-        if all([board[j][i] == player for j in range(3)]):  # Columns
-            return True
-    if all([board[i][i] == player for i in range(3)]):  # Main diagonal
-        return True
-    if all([board[i][2 - i] == player for i in range(3)]):  # Anti-diagonal
-        return True
+        if board[i][0] == board[i][1] == board[i][2] != ' ':
+            if board[i][0] == 'X':
+                return 'X'
+            else: return 'O'
+        if board[0][i] == board[1][i] == board[2][i] != ' ':
+            if board[i][0] == 'X':
+                return 'X'
+            else: return 'O'
+    if board[0][0] == board[1][1] == board[2][2] != ' ':
+        if board[i][0] == 'X':
+                return 'X'
+        else: return 'O'
+    if board[0][2] == board[1][1] == board[2][0] !=' ':
+        if board[i][0] == 'X':
+                return 'X'
+        else: return 'O'
+    
     return False
 
 def is_full(board):
@@ -41,6 +49,8 @@ def play_game():
     board = [[' ' for _ in range(3)] for _ in range(3)]
     current_player = 'X'
     print_Iboard()
+    os.system('pause')
+    os.system('cls')
     while True:
         print_board(board)
         try:
@@ -58,24 +68,22 @@ def play_game():
 
         board[row][col] = current_player
 
-        if check_winner(board, current_player):
+        if check_winner(board):
             print_board(board)
             print(f"🎉 Player {current_player} wins!")
             break
         elif is_full(board):
             print_board(board)
             print("It's a draw!")
-            break
+            break 
+    preferred_moves = [
+        (1, 1), 
+        (0, 0), (0, 2), (2, 0), (2, 2),  
+        (0, 1), (1, 0), (1, 2), (2, 1)   
+    ]
 
-        # Switch player
-        comp = computer(board, current_player, row,col)
-        if comp == True:
-            comp == 'O'
-        current_player = 'X' if current_player == comp else 'X'
-
-def computer(board, current_player, row,col):
-    if board[1][1] == ' ':
-        return True;
-
-# Start the game
+    for row, col in preferred_moves:
+        if board[row][col] == ' ':
+            board[row][col] = 'O'
+    
 play_game()
