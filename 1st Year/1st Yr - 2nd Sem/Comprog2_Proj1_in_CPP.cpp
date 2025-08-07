@@ -1,4 +1,3 @@
-//FLORES, Earl John C.
 #include <iostream>
 #include <iomanip>
 #include <fstream>

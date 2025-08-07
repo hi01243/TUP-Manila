@@ -1,4 +1,3 @@
-#FLORES, Earl John C.
 import os
 
 def print_board(board):
