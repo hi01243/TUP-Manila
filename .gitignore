@@ -1,0 +1,31 @@
+# ===== Java =====
+*.class
+*.jar
+*.war
+*.ear
+*.iml
+.idea/
+out/
+
+# ===== Python =====
+__pycache__/
+*.pyc
+venv/
+.env
+.cbp
+/layout
+
+# ===== C / C++ =====
+*.o
+*.exe
+
+# ===== Web =====
+node_modules/
+dist/
+
+# ===== General =====
+*.log
+.DS_Store
+# ===== Code::Blocks =====
+*.cbp
+*.layout
