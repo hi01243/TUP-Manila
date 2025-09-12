@@ -74,7 +74,7 @@ void ADTLink::add(int x){
     p=q=head;              // Start traversal from head
     newNode = new List();  // Create a new node
     newNode->data = x;     // Assign data
-    newNode->data = x;     // (duplicate line, but does same thing)
+    //newNode->data = x;     // (duplicate line, but does same thing)
 
     // Traverse until end of list
     while (p!=NULL){
