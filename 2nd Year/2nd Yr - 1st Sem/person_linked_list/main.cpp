@@ -37,13 +37,15 @@ int main(){
         switch(menu()){
             case 1: // Add person
                 system("cls");
-                cout<<"Enter name: "; cin>>d.name;
+                cin.ignore();
+                cout<<"Enter name: "; getline(cin,d.name);
                 cout<<"Enter age: "; cin>>d.age;
                 lst.add(d.name, d.age);
                 break;
             case 2: // Delete person
                 system("cls");
-                cout<<"Enter name to delete: "; cin>>d.name;
+                cin.ignore();
+                cout<<"Enter name to delete: "; getline(cin,d.name);
                 lst.del(d.name);
                 break;
             case 3: // Display all persons
@@ -79,56 +81,46 @@ void PersonList::makeNull(){
 
 // Add a new person to the end of the list
 void PersonList::add(string name, int age){
-    PersonNode *p,*q, *newNode;
-    p=q=head;
-
-    // Create new node
-    newNode = new PersonNode();
-    newNode->name = name;
-    newNode->age = age;
-
-    // Traverse to the end
-    while (p!=NULL){
-        q=p;
-        p=p->next;
-    }
-
-    // If list is empty, new node is head
-    if (p==head)
+    PersonNode *newNode = new PersonNode{name,age,nullptr};
+    if (!head){
         head = newNode;
-    else
-        q->next = newNode;
-
-    newNode->next = p; // p is NULL here
-    cout<<name<<" (age "<<age<<") was added successfully"<<endl;
-    system("pause");
+    }else{
+        PersonNode *p = head;
+        while (p->next)
+            p=p->next;
+        p -> next = newNode;
+    }
 }
 
 // Delete a person by name
 void PersonList::del(string name){
-    PersonNode *p,*q;
-    p=q=head;
-
-    // Traverse list until found
-    while(p != NULL && name!=p->name){
-        q=p;
-        p=p->next;
+    if(!head){
+        cout<<"List is empty"<<endl;
+        system("pause");
+        return;
     }
 
-    if(p==NULL){ // Not found
-        cout<<"Person not found\n";
+    if(head->name == name){
+        PersonNode *temp = head;
+        head = head->next;
+        delete temp;
+        cout <<name<<" was deleted successfully"<<endl;
         system("pause");
-    }else{
-        // If deleting head
-        if(p == head)
-            head = p->next;
-        else
-            q->next = p->next;
-
-        delete(p); // Free memory
+        return;
+    }
+    PersonNode *p = head;
+    while(p->next && p->next->name != name)
+        p = p->next;
+    if(!p->next){
+        cout<<"Person not found"<<endl;
+    }
+    else{
+        PersonNode *temp = p->next;
+        p->next = temp->next;
+        delete temp;
         cout<<name<<" was deleted successfully"<<endl;
-        system("pause");
     }
+
 }
 
 // Display all persons
