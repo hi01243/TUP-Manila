@@ -74,7 +74,9 @@ void PersonList::makeNull(){
 }
 
 void PersonList::add(Person x){
-    PersonNode *newNode = new PersonNode{x, nullptr};
+    PersonNode *newNode = new PersonNode;
+    newNode->data = x;
+    newNode->next = NULL;
     if (!head){
         head = newNode;
     }else{
