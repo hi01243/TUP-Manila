@@ -3,15 +3,14 @@
 #include <fstream>
 using namespace std;
 
-struct PersonNode {
-    string name;
-    int age;
-    PersonNode *next;
-};
-
 struct Person {
     string name;
     int age;
+};
+
+struct PersonNode {
+    Person data;
+    PersonNode *next;
 };
 
 class PersonList {
@@ -82,7 +81,7 @@ void PersonList::makeNull() {
 }
 
 void PersonList::add(Person x) {
-    PersonNode *newNode = new PersonNode{x.name, x.age, nullptr};
+    PersonNode *newNode = new PersonNode{x, nullptr};
     if (!head) {
         head = newNode;
     } else {
@@ -100,7 +99,7 @@ void PersonList::del(string name) {
         return;
     }
 
-    if (head->name == name) {
+    if (head->data.name == name) {
         PersonNode *temp = head;
         head = head->next;
         delete temp;
@@ -110,7 +109,7 @@ void PersonList::del(string name) {
     }
 
     PersonNode *p = head;
-    while (p->next && p->next->name != name)
+    while (p->next && p->next->data.name != name)
         p = p->next;
 
     if (!p->next) {
@@ -132,7 +131,7 @@ void PersonList::display() {
         int i = 1;
         cout << "List of persons: \n";
         while (p != NULL) {
-            cout << i++ << ".) Name: " << p->name << ", Age: " << p->age << endl;
+            cout << i++ << ".) Name: " << p->data.name << ", Age: " << p->data.age << endl;
             p = p->next;
         }
     }
@@ -144,10 +143,10 @@ void PersonList::save() {
     if (!fout) {
         cout << "Error opening file for writing!" << endl;
         return;
-    }
+     }
     PersonNode *p = head;
     while (p) {
-        fout << p->name << "\n" << p->age << "\n";
+        fout << p->data.name << "\n" << p->data.age << "\n";
         p = p->next;
     }
     fout.close();
@@ -163,8 +162,8 @@ void PersonList::retrieve() {
     while (getline(fin, name)) {
         if (!(fin >> age)) break;
         fin.ignore();
-        Person p{name, age};
-        add(p);
+        Person d{name, age};
+        add(d);
     }
     fin.close();
 }
