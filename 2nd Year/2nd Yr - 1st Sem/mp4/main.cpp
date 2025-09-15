@@ -2,57 +2,53 @@
 #include <string>
 using namespace std;
 
-// Node structure representing a person
-struct PersonNode {
-    string name;         // Person's name
-    int age;             // Person's age
-    PersonNode *next;    // Pointer to the next node
-};
-
-// A simple struct just for holding input data (like d.name, d.age)
 struct Person {
     string name;
     int age;
 };
 
-// Class for linked list of persons
+struct PersonNode {
+    Person data;
+    PersonNode *next;
+};
+
 class PersonList {
 private:
-    PersonNode *head; // Pointer to the first person in the list
+    PersonNode *head;
 public:
-    void makeNull();                         // Initialize the list as empty
-    void add(string name, int age);          // Add a person at the end
-    void del(string name);                   // Delete a person by name
-    void display();                          // Display all persons
+    void makeNull();
+    void add(Person x);
+    void del(string name);
+    void display();
 };
 
 int menu();
 
 int main(){
-    PersonList lst;   // Create linked list object
-    Person d;         // Temporary Person object for user input
-    lst.makeNull();   // Initialize empty list
+    PersonList lst;
+    Person d;
+    lst.makeNull();
 
     while (true){
         switch(menu()){
-            case 1: // Add person
+            case 1:
                 system("cls");
                 cin.ignore();
                 cout<<"Enter name: "; getline(cin,d.name);
                 cout<<"Enter age: "; cin>>d.age;
-                lst.add(d.name, d.age);
+                lst.add(d);
                 break;
-            case 2: // Delete person
+            case 2:
                 system("cls");
                 cin.ignore();
                 cout<<"Enter name to delete: "; getline(cin,d.name);
                 lst.del(d.name);
                 break;
-            case 3: // Display all persons
+            case 3:
                 system("cls");
                 lst.display();
                 break;
-            case 4: // Exit program
+            case 4:
                 exit(0);
             default:
                 cout<<"Invalid input"<<endl;
@@ -62,7 +58,6 @@ int main(){
     return 0;
 }
 
-// Display the menu and return choice
 int menu(){
     int op;
     cout <<"Menu\n";
@@ -74,25 +69,22 @@ int menu(){
     return op;
 }
 
-// Initialize list (head points to NULL)
 void PersonList::makeNull(){
     head = NULL;
 }
 
-// Add a new person to the end of the list
-void PersonList::add(string name, int age){
-    PersonNode *newNode = new PersonNode{name,age,nullptr};
+void PersonList::add(Person x){
+    PersonNode *newNode = new PersonNode{x, nullptr};
     if (!head){
         head = newNode;
     }else{
         PersonNode *p = head;
         while (p->next)
             p=p->next;
-        p -> next = newNode;
+        p->next = newNode;
     }
 }
 
-// Delete a person by name
 void PersonList::del(string name){
     if(!head){
         cout<<"List is empty"<<endl;
@@ -100,7 +92,7 @@ void PersonList::del(string name){
         return;
     }
 
-    if(head->name == name){
+    if(head->data.name == name){
         PersonNode *temp = head;
         head = head->next;
         delete temp;
@@ -108,9 +100,11 @@ void PersonList::del(string name){
         system("pause");
         return;
     }
+
     PersonNode *p = head;
-    while(p->next && p->next->name != name)
+    while(p->next && p->next->data.name != name)
         p = p->next;
+
     if(!p->next){
         cout<<"Person not found"<<endl;
     }
@@ -120,20 +114,20 @@ void PersonList::del(string name){
         delete temp;
         cout<<name<<" was deleted successfully"<<endl;
     }
-
+    system("pause");
 }
 
-// Display all persons
 void PersonList::display(){
-    PersonNode *p;
-    int i = 1;
-    p = head;
-    cout<<"List of persons: \n";
-
-    // Traverse list and print
-    while (p!=NULL){
-        cout<<i++<<".) Name: "<<p->name<<", Age: "<<p->age<<endl;
-        p=p->next;
+    if (!head){
+        cout<<"List is empty"<<endl;
+    } else {
+        PersonNode *p = head;
+        int i = 1;
+        cout<<"List of persons: \n";
+        while (p!=NULL){
+            cout<<i++<<".) Name: "<<p->data.name<<", Age: "<<p->data.age<<endl;
+            p=p->next;
+        }
     }
     system("pause");
 }
