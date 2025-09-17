@@ -27,12 +27,14 @@ public:
     void display();
     void save();
     void retrieve();
+    void update(string x);
 };
 
 int menu() {
+    system("cls");
     int op;
     cout << "ADT List of structures" << endl;
-    cout << "|\t1. Insert\t\t|\n|\t2. Delete\t\t|\n|\t3. Display\t\t|\n|\t4. Exit\t\t\t|\n";
+    cout << "|\t1. Insert\t\t|\n|\t2. Delete\t\t|\n|\t3. Update\t\t|\n|\t4. Display\t\t|\n|\t4. Exit\t\t\t|\n";
     cout << "Enter choice: ";
     cin >> op;
     return op;
@@ -67,20 +69,25 @@ int main() {
             ADT.save();
             break;
         }
-        case 3: {
+        case 3:{
+            cin.ignore(); Record rec;
+            cout<<"Input a name to update: "; getline(cin,rec.name);
+            ADT.update(rec.name); ADT.save();break;
+        }
+        case 4: {
             system("cls");
             ADT.display();
             system("pause");
             break;
         }
-        case 4: {
+        case 5: {
             cout << "Exited successfully" << endl;
             ADT.save();
             return 0;
         }
-        default: {
+        default:
             cout << "Input 1-4 only" << endl;
-        }
+
         }
     }
     return 0;
@@ -150,15 +157,15 @@ void ADTList::display() {
 
 
 void ADTList::save() {
-    ofstream fout("records.txt");
+     ofstream fout("records.txt");
     if (!fout) {
         cout << "Error opening file for writing!" << endl;
         return;
     }
-    fout << L.last << endl;
-    for (int i = 0; i <= L.last; i++) {
-        fout << L.person[i].name << endl;
-        fout << L.person[i].age << endl;
+    fout<<L.last <<endl;
+    for(int i = 0;i<=L.last+1;i++){
+        fout<<L.person[i].name;
+        fout<<L.person[i].age;
     }
     fout.close();
 }
@@ -175,4 +182,37 @@ void ADTList::retrieve() {
         fin.ignore();
     }
     fin.close();
+}
+
+void ADTList::update(string x){
+    system("cls");
+    int p = locate(x);
+    if(p==-1){
+        cout<<"Name not found"<<endl;
+        system("pause");
+        return;
+    }
+    cout<<"Age: " << L.person[p].age<<endl;
+    char c;
+    cout<<"Do you want to continue (Y\\N)? "; cin>>c;
+    while(true){
+        switch(c){
+        case 'Y':{
+                system("cls");
+                int age;
+                cout<<"Input new age: "; cin>>age;
+                L.person[p].age = age;
+                cout<<"Successfully Updated"<<endl;
+                system("pause");
+                return;
+            }
+        case 'N':{
+                system("cls");
+                cout<<"Edi don't"<<endl;
+                system("pause");
+                return;
+            }
+        default: cout<<"Invalid input"<<endl;
+        }
+    }
 }

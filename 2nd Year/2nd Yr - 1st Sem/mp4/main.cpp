@@ -7,14 +7,14 @@ struct Person {
     int age;
 };
 
-struct PersonNode {
+struct List {
     Person data;
-    PersonNode *next;
+    List *next;
 };
 
 class PersonList {
 private:
-    PersonNode *head;
+    List *head;
 public:
     void makeNull();
     void add(Person x);
@@ -25,9 +25,9 @@ public:
 int menu();
 
 int main(){
-    PersonList lst;
+    PersonList adt;
     Person d;
-    lst.makeNull();
+    adt.makeNull();
 
     while (true){
         switch(menu()){
@@ -36,17 +36,17 @@ int main(){
                 cin.ignore();
                 cout<<"Enter name: "; getline(cin,d.name);
                 cout<<"Enter age: "; cin>>d.age;
-                lst.add(d);
+                adt.add(d);
                 break;
             case 2:
                 system("cls");
                 cin.ignore();
                 cout<<"Enter name to delete: "; getline(cin,d.name);
-                lst.del(d.name);
+                adt.del(d.name);
                 break;
             case 3:
                 system("cls");
-                lst.display();
+                adt.display();
                 break;
             case 4:
                 exit(0);
@@ -74,13 +74,13 @@ void PersonList::makeNull(){
 }
 
 void PersonList::add(Person x){
-    PersonNode *newNode = new PersonNode;
+    List *newNode = new List;
     newNode->data = x;
     newNode->next = NULL;
     if (!head){
         head = newNode;
     }else{
-        PersonNode *p = head;
+        List *p = head;
         while (p->next)
             p=p->next;
         p->next = newNode;
@@ -95,7 +95,7 @@ void PersonList::del(string name){
     }
 
     if(head->data.name == name){
-        PersonNode *temp = head;
+        List *temp = head;
         head = head->next;
         delete temp;
         cout <<name<<" was deleted successfully"<<endl;
@@ -103,7 +103,7 @@ void PersonList::del(string name){
         return;
     }
 
-    PersonNode *p = head;
+    List *p = head;
     while(p->next && p->next->data.name != name)
         p = p->next;
 
@@ -111,7 +111,7 @@ void PersonList::del(string name){
         cout<<"Person not found"<<endl;
     }
     else{
-        PersonNode *temp = p->next;
+        List *temp = p->next;
         p->next = temp->next;
         delete temp;
         cout<<name<<" was deleted successfully"<<endl;
@@ -123,7 +123,7 @@ void PersonList::display(){
     if (!head){
         cout<<"List is empty"<<endl;
     } else {
-        PersonNode *p = head;
+        List *p = head;
         int i = 1;
         cout<<"List of persons: \n";
         while (p!=NULL){

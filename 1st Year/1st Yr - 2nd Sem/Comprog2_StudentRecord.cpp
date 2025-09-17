@@ -158,7 +158,6 @@ void upd(string n){
     cout << "========================================"<<endl;
     cout << "|             UPDATE A RECORD           |"<<endl;
     cout << "========================================"<<endl;
-    cout << "What quiz do you want to change (1-3)? "; cin >> c;
     cout << "----------------------------------------"<<endl;
     if(c == 1){
         cout << "Enter score: "; cin>> student[p].q1;
